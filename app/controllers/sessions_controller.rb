@@ -11,6 +11,7 @@ class SessionsController < ApplicationController
     ldap = Net::LDAP.new connection
     if ldap.bind
       # log the user in and redirect to the user's show page
+      session[:username] = params[:session][:username]
       redirect_to root_path
     else
       render 'new'
