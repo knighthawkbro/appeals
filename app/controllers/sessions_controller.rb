@@ -1,27 +1,23 @@
 class SessionsController < ApplicationController
-  def new
-  end
+  # Form for login
+  def new; end
 
+  # Logging into a new Sessions
   def create
-
-      host = 'MSD-INF-SDC-001.msd.govt.state.ma.us'
-      port = 636
-      ldap = Net::LDAP.new :host => host,
-          :port => port,
-          :encryption => :simple_tls,
-          :auth => {
-              :method => :simple,
-              :username => params[:session][:username],
-              :password => params[:session][:password]
-          }
-      if ldap.bind
-        # log the user in and redirect to the user's show page
-        redirect_to root_path
-      else
-      	render 'new'
-      end
+    connection = { host: 'MSD-INF-SDC-001.msd.govt.state.ma.us',
+                   port: 636, encryption: :simple_tls, auth: {
+                     method: :simple, username: params[:session][:username],
+                     password: params[:session][:password] } }
+    ldap = Net::LDAP.new connection
+    if ldap.bind
+      # log the user in and redirect to the user's show page
+      session[:username] = params[:session][:username]
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
-  def destroy
-  end
+  # Logging out of a session
+  def destroy; end
 end
